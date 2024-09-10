@@ -1,0 +1,6 @@
+@Nasa_WebAPI_HostAddress = http://localhost:5146
+
+GET {{Nasa_WebAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
