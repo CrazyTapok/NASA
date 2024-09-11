@@ -8,6 +8,6 @@ namespace Nasa_DAL.Enum
 {
     public enum ETypeGeolocation
     {
-        Point
+        Point = 1
     }
 }

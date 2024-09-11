@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using Nasa_DAL.Entities;
+using NAS_BAL.Entities;
 
 namespace Nasa_DAL.EntityConfiguration
 {
@@ -16,6 +17,11 @@ namespace Nasa_DAL.EntityConfiguration
 
             builder.HasIndex(t => t.Type)
                    .HasDatabaseName("IX_Geolocation_Type");
+
+            builder.HasOne(t => t.Meteorite)
+                   .WithOne(m => m.Geolocation)
+                   .HasForeignKey<Geolocation>(t => t.MeteoriteId)
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

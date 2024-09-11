@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using NAS_BAL.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
+using Nasa_DAL.Entities;
 
 namespace NAS_BAL.EntityConfiguration
 {
@@ -8,13 +10,15 @@ namespace NAS_BAL.EntityConfiguration
     {
         public void Configure(EntityTypeBuilder<Meteorite> builder)
         {
-
             builder.ToTable("Meteorites")
-               .HasKey(t => t.Id);
+                .HasKey(t => t.Id);
 
-            builder.Property(t => t.Id).IsRequired();
+            builder.Property(t => t.Id)
+                .IsRequired()
+                .ValueGeneratedNever();
 
-            builder.Property(t => t.Name).IsRequired();
+            builder.Property(t => t.Name)
+                .IsRequired();
 
             builder.HasIndex(t => t.Name)
                    .HasDatabaseName("IX_Meteorite_Name");
@@ -25,10 +29,10 @@ namespace NAS_BAL.EntityConfiguration
             builder.HasIndex(t => t.Year)
                    .HasDatabaseName("IX_Meteorite_Year");
 
-            builder.HasOne(t => t.Geolocation)
-                .WithMany()
-                .HasForeignKey(t => t.GeolocationId)
-                .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(m => m.Geolocation)
+                   .WithOne(g => g.Meteorite)
+                   .HasForeignKey<Geolocation>(g => g.MeteoriteId)
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

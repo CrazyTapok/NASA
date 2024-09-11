@@ -14,7 +14,6 @@ namespace NAS_BAL.Entities
         public DateTime? Year { get; set; }
         public double Reclat { get; set; }
         public double Reclong { get; set; }
-        public int GeolocationId { get; set; }
         public Geolocation Geolocation { get; set; }
     }
 }

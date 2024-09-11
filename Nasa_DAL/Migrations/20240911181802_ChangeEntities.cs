@@ -6,31 +6,16 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Nasa_DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class ChangeEntities : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Geolocations",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Type = table.Column<int>(type: "int", nullable: false),
-                    Coordinates = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Geolocations", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Meteorites",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     NameType = table.Column<int>(type: "int", nullable: false),
                     RecClass = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -38,16 +23,30 @@ namespace Nasa_DAL.Migrations
                     Fall = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Year = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Reclat = table.Column<double>(type: "float", nullable: false),
-                    Reclong = table.Column<double>(type: "float", nullable: false),
-                    GeolocationId = table.Column<int>(type: "int", nullable: false)
+                    Reclong = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Meteorites", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Geolocations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    Coordinates = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MeteoriteId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Geolocations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Meteorites_Geolocations_GeolocationId",
-                        column: x => x.GeolocationId,
-                        principalTable: "Geolocations",
+                        name: "FK_Geolocations_Meteorites_MeteoriteId",
+                        column: x => x.MeteoriteId,
+                        principalTable: "Meteorites",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -56,6 +55,12 @@ namespace Nasa_DAL.Migrations
                 name: "IX_Geolocation_Type",
                 table: "Geolocations",
                 column: "Type");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Geolocations_MeteoriteId",
+                table: "Geolocations",
+                column: "MeteoriteId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Meteorite_Name",
@@ -71,21 +76,16 @@ namespace Nasa_DAL.Migrations
                 name: "IX_Meteorite_Year",
                 table: "Meteorites",
                 column: "Year");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Meteorites_GeolocationId",
-                table: "Meteorites",
-                column: "GeolocationId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Meteorites");
+                name: "Geolocations");
 
             migrationBuilder.DropTable(
-                name: "Geolocations");
+                name: "Meteorites");
         }
     }
 }

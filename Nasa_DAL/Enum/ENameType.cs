@@ -8,6 +8,6 @@ namespace Nasa_DAL.Enum
 {
     public enum ENameType
     {
-        Valid
+        Valid = 1
     }
 }

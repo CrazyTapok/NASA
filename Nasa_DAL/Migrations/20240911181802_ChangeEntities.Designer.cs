@@ -12,8 +12,8 @@ using NAS_BAL.EF;
 namespace Nasa_DAL.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20240910183826_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240911181802_ChangeEntities")]
+    partial class ChangeEntities
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,17 +28,11 @@ namespace Nasa_DAL.Migrations
             modelBuilder.Entity("NAS_BAL.Entities.Meteorite", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Fall")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("GeolocationId")
-                        .HasColumnType("int");
 
                     b.Property<double>("Mass")
                         .HasColumnType("float");
@@ -65,8 +59,6 @@ namespace Nasa_DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GeolocationId");
-
                     b.HasIndex("Name")
                         .HasDatabaseName("IX_Meteorite_Name");
 
@@ -91,10 +83,16 @@ namespace Nasa_DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("MeteoriteId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MeteoriteId")
+                        .IsUnique();
 
                     b.HasIndex("Type")
                         .HasDatabaseName("IX_Geolocation_Type");
@@ -102,15 +100,21 @@ namespace Nasa_DAL.Migrations
                     b.ToTable("Geolocations", (string)null);
                 });
 
-            modelBuilder.Entity("NAS_BAL.Entities.Meteorite", b =>
+            modelBuilder.Entity("Nasa_DAL.Entities.Geolocation", b =>
                 {
-                    b.HasOne("Nasa_DAL.Entities.Geolocation", "Geolocation")
-                        .WithMany()
-                        .HasForeignKey("GeolocationId")
+                    b.HasOne("NAS_BAL.Entities.Meteorite", "Meteorite")
+                        .WithOne("Geolocation")
+                        .HasForeignKey("Nasa_DAL.Entities.Geolocation", "MeteoriteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Geolocation");
+                    b.Navigation("Meteorite");
+                });
+
+            modelBuilder.Entity("NAS_BAL.Entities.Meteorite", b =>
+                {
+                    b.Navigation("Geolocation")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
