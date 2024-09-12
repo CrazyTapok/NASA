@@ -92,7 +92,10 @@ namespace Nasa_BAL.Services
 
                 var meteoritesToRemove = listMeteorites.Where(t => !newMeteoritesDict.ContainsKey(t.Id)).ToList();
 
-                await RemoveMeteoritesAsync(meteoritesToRemove);
+                if (meteoritesToRemove.Count > 0)
+                {
+                    await RemoveMeteoritesAsync(meteoritesToRemove);
+                }
 
                 foreach (var newMeteorite in newMeteorites)
                 {

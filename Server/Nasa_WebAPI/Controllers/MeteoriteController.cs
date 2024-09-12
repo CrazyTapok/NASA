@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Nasa_BAL.Interfaces;
 using System.Net;
 
@@ -10,9 +11,12 @@ namespace Nasa_WebAPI.Controllers
     {
         private readonly IMeteoriteService _meteoriteService;
 
-        public MeteoriteController(IMeteoriteService meteoriteService)
+        private readonly IMemoryCache _cache;
+
+        public MeteoriteController(IMeteoriteService meteoriteService, IMemoryCache cache)
         {
             _meteoriteService = meteoriteService;
+            _cache = cache;
         }
 
         /// <summary>
@@ -30,7 +34,17 @@ namespace Nasa_WebAPI.Controllers
         {
             try
             {
-                var meteoriteGroups = await _meteoriteService.GetMeteoritesAsync(startYear, endYear, recclass, namePart, sortBy, ascending);
+                var key = $"{startYear}-{endYear}-{recclass}-{namePart}-{sortBy}-{ascending}";
+
+                if (!_cache.TryGetValue(key, out var meteoriteGroups))
+                {
+                    meteoriteGroups = await _meteoriteService.GetMeteoritesAsync(startYear, endYear, recclass, namePart, sortBy, ascending);
+
+                    var options = new MemoryCacheEntryOptions()
+                        .SetSlidingExpiration(TimeSpan.FromMinutes(30));
+
+                    _cache.Set(key, meteoriteGroups, options);
+                }
            
                 return Ok(meteoriteGroups);
             }
