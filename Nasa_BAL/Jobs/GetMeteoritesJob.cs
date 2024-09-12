@@ -28,7 +28,6 @@ namespace Nasa_BAL.Jobs
             {
                 var response = await _httpClient.GetStringAsync("https://data.nasa.gov/resource/y77d-th95.json");
                 var meteorites = JsonConvert.DeserializeObject<List<Meteorite>>(response);
-                //meteorites = new List<Meteorite>();
 
                 await _meteoriteService.DecisionMakingCenter(meteorites);
 

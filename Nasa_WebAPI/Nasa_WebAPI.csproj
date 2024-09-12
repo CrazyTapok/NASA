@@ -1,9 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,6 +25,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Nasa_BAL\Nasa_BAL.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="LogsApp\" />
   </ItemGroup>
 
 </Project>

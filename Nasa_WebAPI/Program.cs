@@ -1,12 +1,12 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using NAS_BAL.EF;
-using Nasa_BAL.Interfaces;
 using Nasa_BAL.Jobs;
-using Nasa_BAL.Services;
 using Nasa_WebAPI.Extensions.Configuration;
 using Quartz;
 using Serilog;
 using Serilog.Events;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,10 +22,16 @@ builder.Host.UseSerilog();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(t =>
+{
+    t.SwaggerDoc("v1", new OpenApiInfo { Title = "Nasa API", Version = "v1" });
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    t.IncludeXmlComments(xmlPath);
+});
+
 
 string connection = builder.Configuration.GetConnectionString("DefaultConnection");
-
 builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
 
 builder.Services.AddServices();

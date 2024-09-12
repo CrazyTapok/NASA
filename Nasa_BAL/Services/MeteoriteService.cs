@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using NAS_BAL.EF;
 using NAS_BAL.Entities;
 using Nasa_BAL.Interfaces;
+using Nasa_BAL.Models;
 
 namespace Nasa_BAL.Services
 {
@@ -76,7 +77,7 @@ namespace Nasa_BAL.Services
                 _logger.LogError(ex, $"Oops( Error updating meteorite with ID:{oldMeteorite?.Id}");
                 throw;
             }
-           
+
         }
 
         public async Task DecisionMakingCenter(List<Meteorite> newMeteorites)
@@ -110,6 +111,65 @@ namespace Nasa_BAL.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Oops( Error executing GetMeteoritesJob");
+            }
+        }
+
+        public async Task<List<MeteoriteGroup>> GetMeteoritesAsync(int? startYear, int? endYear, string? recclass, string? namePart, string? sortBy, bool ascending)
+        {
+            try
+            {
+                var query = _context.Meteorites.Include(m => m.Geolocation).AsQueryable();
+
+                if (startYear.HasValue)
+                {
+                    query = query.Where(m => m.Year.HasValue && m.Year.Value.Year >= startYear.Value);
+                }
+                if (endYear.HasValue)
+                {
+                    query = query.Where(m => m.Year.HasValue && m.Year.Value.Year <= endYear.Value);
+                }
+
+
+                if (!string.IsNullOrEmpty(recclass))
+                {
+                    query = query.Where(m => m.RecClass == recclass);
+                }
+
+
+                if (!string.IsNullOrEmpty(namePart))
+                {
+                    query = query.Where(m => m.Name.Contains(namePart));
+                }
+
+                var groupedQuery = query.GroupBy(m => m.Year.HasValue ? m.Year.Value.Year : 0)
+                                        .Select(g => new MeteoriteGroup
+                                        {
+                                            Year = g.Key,
+                                            Count = g.Count(),
+                                            TotalMass = g.Sum(m => m.Mass),
+                                        });
+
+
+                switch (sortBy?.ToLower())
+                {
+                    case "year":
+                        groupedQuery = ascending ? groupedQuery.OrderBy(g => g.Year) : groupedQuery.OrderByDescending(g => g.Year);
+                        break;
+                    case "count":
+                        groupedQuery = ascending ? groupedQuery.OrderBy(g => g.Count) : groupedQuery.OrderByDescending(g => g.Count);
+                        break;
+                    case "totalmass":
+                        groupedQuery = ascending ? groupedQuery.OrderBy(g => g.TotalMass) : groupedQuery.OrderByDescending(g => g.TotalMass);
+                        break;
+                }
+
+                return await groupedQuery.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Oops( Error get data.");
+                
+                throw;
             }
         }
     }
