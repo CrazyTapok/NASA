@@ -117,7 +117,7 @@ namespace Nasa_BAL.Services
             }
         }
 
-        public async Task<List<MeteoriteGroup>> GetMeteoritesAsync(int? startYear, int? endYear, string? recclass, string? namePart, string? sortBy, bool ascending)
+        public async Task<List<MeteoriteGroup>> GetMeteoritesAsync(int? startYear, int? endYear, string? recClass, string? namePart, string? sortBy, bool ascending)
         {
             try
             {
@@ -133,9 +133,9 @@ namespace Nasa_BAL.Services
                 }
 
 
-                if (!string.IsNullOrEmpty(recclass))
+                if (!string.IsNullOrEmpty(recClass))
                 {
-                    query = query.Where(m => m.RecClass == recclass);
+                    query = query.Where(m => m.RecClass == recClass);
                 }
 
 
@@ -172,6 +172,45 @@ namespace Nasa_BAL.Services
             {
                 _logger.LogError(ex, "Oops( Error get data.");
                 
+                throw;
+            }
+        }
+
+        public async Task<List<string>> GetUniqueRecClassAsync()
+        {
+            try
+            {
+                var uniqueRecClasses = await _context.Meteorites
+                                                     .Select(m => m.RecClass)
+                                                     .Distinct()
+                                                     .ToListAsync();
+
+                return uniqueRecClasses;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Oops( Error getting unique RecClass values.");
+                throw;
+            }
+        }
+
+        public async Task<(int MinYear, int MaxYear)> GetMinMaxYearAsync()
+        {
+            try
+            {
+                var minYear = await _context.Meteorites
+                                            .Where(m => m.Year.HasValue)
+                                            .MinAsync(m => m.Year.Value.Year);
+
+                var maxYear = await _context.Meteorites
+                                            .Where(m => m.Year.HasValue)
+                                            .MaxAsync(m => m.Year.Value.Year);
+
+                return (minYear, maxYear);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Oops( Error getting min and max year.");
                 throw;
             }
         }

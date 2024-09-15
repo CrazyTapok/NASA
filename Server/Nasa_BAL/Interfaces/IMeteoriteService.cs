@@ -9,6 +9,8 @@ namespace Nasa_BAL.Interfaces
         Task UpdateMeteoriteAsync(Meteorite oldmMeteorite, Meteorite newMeteorite);
         Task RemoveMeteoritesAsync(List<Meteorite> meteoritesToRemove);
         Task DecisionMakingCenter(List<Meteorite> newMeteorites);
-        Task<List<MeteoriteGroup>> GetMeteoritesAsync(int? startYear, int? endYear, string? recclass, string? namePart, string? sortBy, bool ascending);
+        Task<List<MeteoriteGroup>> GetMeteoritesAsync(int? startYear, int? endYear, string? recClass, string? namePart, string? sortBy, bool ascending);
+        Task<(int MinYear, int MaxYear)> GetMinMaxYearAsync();
+        Task<List<string>> GetUniqueRecClassAsync();
     }
 }
