@@ -59,25 +59,6 @@ namespace Nasa_WebAPI.Controllers
         }
 
         /// <summary>
-        /// Get minimum and maximum year.
-        /// </summary>
-        ///<returns> Minimum and maximum year.</returns>
-        [HttpGet("GetMinMaxYear")]
-        public async Task<IActionResult> GetMinMaxYear()
-        {
-            try
-            {
-                var (minYear, maxYear) = await _meteoriteService.GetMinMaxYearAsync();
-
-                return Ok(new { MinYear = minYear, MaxYear = maxYear });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode((int)HttpStatusCode.InternalServerError, new { message = "An unexpected error occurred. Please try again later." });
-            }
-        }
-
-        /// <summary>
         /// Get unique RecClass values.
         /// </summary>
         ///<returns> List of unique RecClass values.</returns>
@@ -89,6 +70,25 @@ namespace Nasa_WebAPI.Controllers
                 var uniqueRecClasses = await _meteoriteService.GetUniqueRecClassAsync();
 
                 return Ok(uniqueRecClasses);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { message = "An unexpected error occurred. Please try again later." });
+            }
+        }
+
+        /// <summary>
+        /// Get unique years.
+        /// </summary>
+        ///<returns> List of unique years.</returns>
+        [HttpGet("GetUniqueYears")]
+        public async Task<IActionResult> GetUniqueYears()
+        {
+            try
+            {
+                var uniqueYears = await _meteoriteService.GetUniqueYearsAsync();
+
+                return Ok(uniqueYears);
             }
             catch (Exception ex)
             {

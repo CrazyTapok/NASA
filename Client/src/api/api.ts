@@ -1,18 +1,4 @@
 import { MeteoriteGroup } from './model/meteoriteGroup';
-import { TimeInterval } from './model/timeInterval';
-
-export const getMinMaxYear = async (): Promise<TimeInterval> => {
-  try {
-    const response = await fetch('https://localhost:44342/api/Meteorite/GetMinMaxYear');
-    if (!response.ok) {
-      throw new Error(`Error: ${response.status} ${response.statusText}`);
-    }
-    return response.json();
-  } catch (error) {
-    console.error('Failed to fetch min and max year:', error);
-    throw error;
-  }
-};
 
 export const getUniqueRecClass = async (): Promise<string[]> => {
   try {
@@ -23,6 +9,19 @@ export const getUniqueRecClass = async (): Promise<string[]> => {
     return response.json();
   } catch (error) {
     console.error('Failed to fetch unique rec classes:', error);
+    throw error;
+  }
+};
+
+export const getUniqueYears = async (): Promise<number[]> => {
+  try {
+    const response = await fetch('https://localhost:44342/api/Meteorite/GetUniqueYears');
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status} ${response.statusText}`);
+    }
+    return response.json();
+  } catch (error) {
+    console.error('Failed to fetch unique years:', error);
     throw error;
   }
 };

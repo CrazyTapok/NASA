@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import { MeteoriteGroup } from '../api/model/meteoriteGroup';
-import { getMeteorites, getMinMaxYear, getUniqueRecClass } from '../api/api';
-import { generateYearArray } from './lib/generateYearArray';
-import { TimeInterval } from '../api/model/timeInterval';
+import { getMeteorites, getUniqueRecClass, getUniqueYears } from '../api/api';
 import { ControlPanel } from './ui/controlPanel';
 import { TableData } from './ui/tableData';
 import { message } from 'antd';
@@ -22,13 +20,10 @@ function App() {
   const [ascending, setAscending] = useState<boolean>(true);
 
   useEffect(() => {
-    getMinMaxYear()
-      .then((data: TimeInterval) => {
-        const yearArray = generateYearArray(data.minYear, data.maxYear);
-        setYears(yearArray);
-      })
+    getUniqueYears()
+      .then((data: number[]) => setYears(data))
       .catch((error) => {
-        message.error('Failed to fetch min and max year');
+        message.error('Failed to fetch unique years');
         console.error(error);
       });
 

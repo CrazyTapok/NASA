@@ -24,12 +24,20 @@ export const ControlPanel = ({
     onSetParamFilter(startYear, endYear, recClass, namePart);
   }, [startYear, endYear, recClass, namePart]);
 
+  const handleClear = () => {
+    setStartYear(null);
+    setEndYear(null);
+    setRecClass('');
+    setNamePart('');
+  };
+
   return (
     <div className="main-panel">
       <div className="main-panel-filter">
         <Select
           className="main-panel-filter-select"
           placeholder="Year From"
+          value={startYear !== null ? startYear : undefined}
           onChange={(value) => {
             setStartYear(Number(value));
           }}
@@ -43,6 +51,7 @@ export const ControlPanel = ({
         <Select
           className="main-panel-filter-select"
           placeholder="Year To"
+          value={endYear !== null ? endYear : undefined}
           onChange={(value) => setEndYear(Number(value))}
         >
           {years.map((year) => (
@@ -54,6 +63,7 @@ export const ControlPanel = ({
         <Select
           className="main-panel-filter-select"
           placeholder="Select Group"
+          value={recClass || undefined}
           onChange={(value) => setRecClass(value)}
         >
           {recClasses.map((recClass) => (
@@ -65,6 +75,7 @@ export const ControlPanel = ({
         <Button type="primary" onClick={onGetMeteorites}>
           Apply Filter
         </Button>
+        <Button danger onClick={handleClear}>Clear</Button>
       </div>
 
       <Search

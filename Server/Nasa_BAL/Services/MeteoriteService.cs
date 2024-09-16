@@ -194,23 +194,21 @@ namespace Nasa_BAL.Services
             }
         }
 
-        public async Task<(int MinYear, int MaxYear)> GetMinMaxYearAsync()
+        public async Task<List<int>> GetUniqueYearsAsync()
         {
             try
             {
-                var minYear = await _context.Meteorites
-                                            .Where(m => m.Year.HasValue)
-                                            .MinAsync(m => m.Year.Value.Year);
+                var uniqueYears = await _context.Meteorites
+                                                .Where(m => m.Year.HasValue)
+                                                .Select(m => m.Year.Value.Year)
+                                                .Distinct()
+                                                .ToListAsync();
 
-                var maxYear = await _context.Meteorites
-                                            .Where(m => m.Year.HasValue)
-                                            .MaxAsync(m => m.Year.Value.Year);
-
-                return (minYear, maxYear);
+                return uniqueYears;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Oops( Error getting min and max year.");
+                _logger.LogError(ex, "Oops( Error getting unique years.");
                 throw;
             }
         }
