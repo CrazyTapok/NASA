@@ -2,6 +2,11 @@
 
 ## About the project
 
+Web application with a single page that displays a list of grouped meteorite data.  
+Display format: year, number of meteorites this year, total mass of meteorites this year.
+Implemented filter: year with, by (drop-down lists), meteorite class (drop-down list), part
+Meteorite name (search text box)
+Added sorting of all columns in ascending and descending order.
 
 ### Run the Server project:
 
