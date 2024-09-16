@@ -45,11 +45,6 @@ function App() {
         message.error('Start year cannot be greater than end year');
         return;
       }
-
-      if (endYear < startYear) {
-        message.error('End year cannot be less than start year');
-        return;
-      }
     } else if (startYear !== null && endYear === null) {
       message.error('Invalid time interval');
       return;

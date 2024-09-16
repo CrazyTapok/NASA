@@ -75,7 +75,9 @@ export const ControlPanel = ({
         <Button type="primary" onClick={onGetMeteorites}>
           Apply Filter
         </Button>
-        <Button danger onClick={handleClear}>Clear</Button>
+        <Button danger onClick={handleClear}>
+          Clear
+        </Button>
       </div>
 
       <Search
